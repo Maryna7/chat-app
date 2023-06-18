@@ -7,9 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   KeyboardAvoidingView,
-  TouchableWithoutFeedback,
   Platform,
-  Keyboard
 } from 'react-native';
 
 const Screen1 = ({ navigation }) => {
@@ -20,60 +18,54 @@ const Screen1 = ({ navigation }) => {
   return (
     <ImageBackground source={require('../assets/background-image.png')} resizeMode='cover' style={styles.flex}>
       {/* adjust height of the page based on the keyboard height*/}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={styles.flex}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
 
-          <View style={styles.container}>
+        {/* title holder */}
+        <View style={styles.flex}>
+          <Text style={styles.title}>App Title</Text>
+        </View>
 
-            {/* title holder */}
-            <View style={styles.flex}>
-              <Text style={styles.title}>App Title</Text>
-            </View>
+        {/* container with a text input field and buttons */}
+        <View style={styles.formHolder}>
+          <TextInput
+            style={[styles.formComponents, styles.textSize, styles.textInput]}
+            value={name}
+            onChangeText={setName}
+            placeholder='Your Name'
+          />
 
-            {/* container with a text input field and buttons */}
-            <View style={styles.formHolder}>
-              <TextInput
-                style={[styles.formComponents, styles.textSize, styles.textInput]}
-                value={name}
-                onChangeText={setName}
-                placeholder='Your Name'
-              />
-
-              <View>
-                <Text style={[styles.formText, styles.textSize]}>Choose Background Color:</Text>
-                <View style={styles.radioList}>
-                  <TouchableOpacity
-                    style={[styles.formComponents, styles.radioButton, { backgroundColor: "#090C08" }]}
-                    onPress={() => setColor("#090C08")}
-                  ></TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.formComponents, styles.radioButton, { backgroundColor: "#474056" }]}
-                    onPress={() => setColor("#474056")}
-                  ></TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.formComponents, styles.radioButton, { backgroundColor: "#8A95A5" }]}
-                    onPress={() => setColor("#8A95A5")}
-                  ></TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.formComponents, styles.radioButton, { backgroundColor: "#B9C6AE" }]}
-                    onPress={() => setColor("#B9C6AE")}
-                  ></TouchableOpacity>
-                </View>
-              </View>
-
+          <View>
+            <Text style={[styles.formText, styles.textSize]}>Choose Background Color:</Text>
+            <View style={styles.radioList}>
               <TouchableOpacity
-                style={[styles.formComponents, styles.button]}
-                onPress={() => navigation.navigate('Chat', { name: name, color: color })}
-              >
-                <Text style={[styles.title, styles.textSize]}> Start Chatting</Text>
-              </TouchableOpacity>
+                style={[styles.formComponents, styles.radioButton, { backgroundColor: "#090C08" }]}
+                onPress={() => setColor("#090C08")}
+              ></TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.formComponents, styles.radioButton, { backgroundColor: "#474056" }]}
+                onPress={() => setColor("#474056")}
+              ></TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.formComponents, styles.radioButton, { backgroundColor: "#8A95A5" }]}
+                onPress={() => setColor("#8A95A5")}
+              ></TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.formComponents, styles.radioButton, { backgroundColor: "#B9C6AE" }]}
+                onPress={() => setColor("#B9C6AE")}
+              ></TouchableOpacity>
             </View>
           </View>
 
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+          <TouchableOpacity
+            style={[styles.formComponents, styles.button]}
+            onPress={() => navigation.navigate('Chat', { name: name, color: color })}
+          >
+            <Text style={[styles.title, styles.textSize]}> Start Chatting</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+      {/* adjust height of the page based on the keyboard height*/}
+      {Platform.OS === "ios" ? <KeyboardAvoidingView behavior="padding" /> : null}
     </ImageBackground>
   );
 }
