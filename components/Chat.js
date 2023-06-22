@@ -1,10 +1,12 @@
-import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { useState, useEffect } from 'react';
 import { GiftedChat, Bubble, InputToolbar } from "react-native-gifted-chat";
 import { collection, query, orderBy, addDoc, onSnapshot } from "firebase/firestore";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MapView from 'react-native-maps';
+import CustomActions from './CustomActions';
 
-const Chat = ({ db, route, navigation, isConnected }) => {
+const Chat = ({ db, route, navigation, isConnected, storage }) => {
   const [messages, setMessages] = useState([]);
   const { name, color, userID } = route.params;
 
@@ -80,6 +82,35 @@ const Chat = ({ db, route, navigation, isConnected }) => {
     else return null;
   }
 
+  // function is responsible for creating the circle button
+  const renderCustomActions = (props) => {
+    return <CustomActions {...props} storage={storage} userID={userID} />;
+  };
+
+  // function is responsible for checking if the currentMessage contains location data
+  const renderCustomView = (props) => {
+    const { currentMessage } = props;
+    if (currentMessage.location) {
+      return (
+        <MapView
+          style={{
+            width: 150,
+            height: 100,
+            borderRadius: 13,
+            margin: 3
+          }}
+          region={{
+            latitude: currentMessage.location.latitude,
+            longitude: currentMessage.location.longitude,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      );
+    }
+    return null;
+  }
+
   return (
     <View style={[styles.container, { backgroundColor: color }]}>
       <GiftedChat
@@ -87,6 +118,8 @@ const Chat = ({ db, route, navigation, isConnected }) => {
         renderBubble={renderBubble}
         renderInputToolbar={renderInputToolbar}
         onSend={messages => onSend(messages)}
+        renderActions={renderCustomActions}
+        renderCustomView={renderCustomView}
         user={{ _id: userID, name }}
       />
       {/* adjust height of the page based on the keyboard height*/}
